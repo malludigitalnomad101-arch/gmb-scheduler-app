@@ -26,6 +26,8 @@
   <label>Final text</label>
   <div id="aiOutput" contenteditable="true">(AI writes here)</div>
 
+  <button onclick="publishNow()" style="margin-top:20px;background:#34A853;color:white">🚀 Publish NOW to GMB</button>
+
   <button onclick="schedulePost()" style="margin-top:20px">📅 Schedule Post</button>
 
   <script>
@@ -44,5 +46,13 @@
         .then(r=>r.json()).then(d=>alert(d.msg||'Scheduled!'));
     }
   </script>
+  <script>
+  async function publishNow(){
+    const text = document.getElementById('aiOutput').innerText;
+    const res = await fetch('/api/publish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    const json = await res.json();
+    alert(json.msg || json.error);
+  }
+</script>
 </body>
 </html>
