@@ -1,16 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Success! GMB Connected</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;text-align:center;margin-top:100px}
-    .check{color:green;font-size:48px}
-  </style>
-</head>
 <body>
-  <div class="check">✅</div>
-  <h1>Google My Business Connected!</h1>
-  <p>Your access token is saved. The full scheduler dashboard is coming next.</p>
-  <p><a href="/">← Back to home</a></p>
+  <script>
+    // grab ?code=... from URL
+    const params = new URLSearchParams(location.search);
+    const code = params.get('code');
+    if (!code) { document.body.innerHTML = 'Missing code'; throw 0; }
+
+    // swap code for token (server-side)
+    fetch('/api/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})})
+      .then(r=>r.json()).then(d=>{
+        // save token
+        fetch('/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:d.access_token})})
+          .then(()=>window.location='/dashboard.html');
+      });
+  </script>
+  <p>Connecting… please wait.</p>
 </body>
-</html>
